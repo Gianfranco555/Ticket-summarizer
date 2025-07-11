@@ -1,24 +1,33 @@
+# pyproject.toml
+
 [tool.poetry]
-name = "ticket-summarizer"
+name = "zscaler-ticket-summarizer"
 version = "0.1.0"
-description = ""
-authors = []
+description = "A CLI tool to parse, chunk, and summarize Zscaler help-desk tickets using an LLM."
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "summarizer"}]
 
 [tool.poetry.dependencies]
-python = ">=3.11"
-pandas = "*"
-tiktoken = "*"
-openai = "*"
-pydantic = "*"
-rich = "*"
+python = ">=3.11, <4.0"
+pandas = "^2.2.2"
+tiktoken = "^0.7.0"
+openai = "^1.35.7"
+pydantic = "^2.7.4"
+rich = "^13.7.1"
+argparse = "^1.4.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "*"
-black = "*"
-isort = "*"
-ruff = "*"
-mypy = "*"
-pre-commit = "*"
+pytest = "^8.2.2"
+black = "^24.4.2"
+isort = "^5.13.2"
+ruff = "^0.5.0"
+mypy = "^1.10.0"
 
 [tool.poetry.scripts]
+# This allows you to run the app with the command "summarizer" after installation.
 summarizer = "summarizer.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

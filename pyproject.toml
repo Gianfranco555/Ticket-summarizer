@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "ticket-summarizer"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+pandas = "*"
+tiktoken = "*"
+openai = "*"
+pydantic = "*"
+rich = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+black = "*"
+isort = "*"
+ruff = "*"
+mypy = "*"
+pre-commit = "*"
+
+[tool.poetry.scripts]
+summarizer = "summarizer.cli:main"

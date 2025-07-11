@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "summarizer"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+pandas = "*"
+tiktoken = "*"
+openai = "*"
+pydantic = "*"
+rich = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+black = "*"
+isort = "*"
+ruff = "*"
+mypy = "*"
+pre-commit = "*"
+
+[tool.poetry.scripts]
+summarizer = "summarizer.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

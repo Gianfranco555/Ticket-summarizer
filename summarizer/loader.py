@@ -23,13 +23,15 @@ class Ticket:
 __all__ = ["Ticket", "load_tickets"]
 
 
-def load_tickets(path: Path) -> list[Ticket]:
+def load_tickets(path: Path, delimiter: str = ",") -> list[Ticket]:
     """Load a list of :class:`Ticket` objects from a CSV file.
 
     Parameters
     ----------
     path:
         Path to the CSV file containing ticket data.
+    delimiter:
+        The delimiter character for the input CSV file.
 
     Returns
     -------
@@ -37,7 +39,7 @@ def load_tickets(path: Path) -> list[Ticket]:
         A list of tickets parsed from the CSV file.
     """
 
-    df = pd.read_csv(path, delimiter=settings.csv_delimiter, dtype=str)
+    df = pd.read_csv(path, delimiter=delimiter, dtype=str)
     required_columns = {"number", "description"}
     if not required_columns.issubset(df.columns):
         missing = sorted(required_columns - set(df.columns))

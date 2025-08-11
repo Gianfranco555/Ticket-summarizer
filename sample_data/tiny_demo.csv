@@ -1,4 +1,4 @@
-number,description
-1,This is a test ticket
-2,This is another test ticket
-3,This is a third test ticket
+number,description,work_notes,comments,opened_at,resolved_at,closed_at,assignment_group,u_original_assignment_group
+1,This is a test ticket,,,,,,,
+2,This is another test ticket,,,,,,,
+3,This is a third test ticket,,,,,,,

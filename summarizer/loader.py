@@ -54,7 +54,9 @@ def load_tickets(path: Path, delimiter: str = ",") -> list[Ticket]:
     for col in df.columns:
         df[col] = df[col].str.strip()
 
-    required_columns = {"number", "description"}
+    df.rename(columns={"u_original_assignment_group": "original_assignment_group"}, inplace=True)
+
+    required_columns = {"number", "description", "work_notes", "comments", "opened_at", "resolved_at", "closed_at", "assignment_group", "original_assignment_group"}
     if not required_columns.issubset(df.columns):
         missing = sorted(required_columns - set(df.columns))
         raise ValueError(f"Input CSV file is missing required columns: {', '.join(missing)}")

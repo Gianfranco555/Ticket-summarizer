@@ -38,7 +38,8 @@ def load_tickets(path: Path, delimiter: str = ",") -> list[Ticket]:
     list[Ticket]
         A list of tickets parsed from the CSV file.
     """
-
+    if len(delimiter) != 1:
+        raise ValueError("Delimiter must be a single character.")
     df = pd.read_csv(path, delimiter=delimiter, dtype=str)
     required_columns = {"number", "description"}
     if not required_columns.issubset(df.columns):

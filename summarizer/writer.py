@@ -1,14 +1,14 @@
 """Writes data to different file formats."""
 
 from pathlib import Path
-from typing import List, Dict
+from typing import Any, Dict, List
 
 import pandas as pd
 
 __all__ = ["write_csv", "write_markdown"]
 
 
-def write_csv(rows: List[Dict], path: Path) -> None:
+def write_csv(rows: List[Dict[str, Any]], path: Path) -> None:
     """Writes a list of dictionaries to a CSV file.
 
     Args:
@@ -19,7 +19,7 @@ def write_csv(rows: List[Dict], path: Path) -> None:
     df.to_csv(path, index=False)
 
 
-def write_markdown(rows: List[Dict], path: Path) -> None:
+def write_markdown(rows: List[Dict[str, Any]], path: Path) -> None:
     """Renders a simple pipe table with incident and summary columns.
 
     Args:
@@ -30,4 +30,6 @@ def write_markdown(rows: List[Dict], path: Path) -> None:
         f.write("| incident | summary |\n")
         f.write("|---|---|\n")
         for row in rows:
-            f.write(f"| {row['incident']} | {row['summary']} |\n")
+            incident = str(row.get("incident", "")).replace("|", "&#124;")
+            summary = str(row.get("summary", "")).replace("|", "&#124;")
+            f.write(f"| {incident} | {summary} |\n")

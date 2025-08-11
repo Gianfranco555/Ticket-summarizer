@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SUMM_")
 
     openai_api_key: str | None = None
-    model: str = "o3"
+    model: str = "gpt-5"
     model_context_window: int = 128_000
     chunk_max_tokens: int = 15000
     model_max_response_tokens: int = 512

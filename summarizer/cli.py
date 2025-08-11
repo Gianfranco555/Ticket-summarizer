@@ -39,7 +39,7 @@ async def main() -> None:
         config.settings.chunk_overlap = args.overlap
 
     # 1. Load tickets
-    tickets = loader.load_tickets(args.csv_in)
+    tickets = loader.load_tickets(args.csv_in, delimiter=config.settings.csv_delimiter)
 
     # 2. Chunk tickets
     chunks = chunker.chunk_tickets(

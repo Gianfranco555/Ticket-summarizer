@@ -16,6 +16,15 @@ def write_csv(rows: List[Dict[str, Any]], path: Path) -> None:
         path: The path to the output CSV file.
     """
     df = pd.DataFrame(rows)
+    # Ensure all desired columns are present, even if some rows are missing them
+    all_columns = ["number", "description", "summary", "work_notes", "comments", "opened_at", "resolved_at", "closed_at", "assignment_group", "original_assignment_group"]
+    for col in all_columns:
+        if col not in df.columns:
+            df[col] = None
+
+    # Reorder columns for consistency
+    df = df[all_columns]
+
     df.to_csv(path, index=False)
 
 

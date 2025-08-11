@@ -23,13 +23,13 @@ def token_len(text: str, model: str | None = None) -> int:
 
 
 def chunk_tickets(
-    tickets: list[Ticket], max_tokens: int, overlap: int
+    tickets: list[Ticket], chunk_max_tokens: int, overlap: int
 ) -> list[str]:
     """Chunk a list of tickets by token count with overlap.
 
     Args:
         tickets: A list of Ticket objects.
-        max_tokens: The maximum number of tokens per chunk.
+        chunk_max_tokens: The maximum number of tokens per chunk.
         overlap: The number of tokens to overlap between chunks.
 
     Returns:
@@ -53,7 +53,7 @@ def chunk_tickets(
 
             separator_tokens = token_len("---") if chunk_tickets_list else 0
 
-            if current_chunk_tokens + ticket_tokens + separator_tokens > max_tokens:
+            if current_chunk_tokens + ticket_tokens + separator_tokens > chunk_max_tokens:
                 break
 
             chunk_tickets_list.append(ticket_to_add)
@@ -61,15 +61,12 @@ def chunk_tickets(
             end_pos += 1
 
         if not chunk_tickets_list:
-            # This can happen if a single ticket is larger than max_tokens.
-            # In this case, we just add the single ticket as a chunk.
             chunks.append(all_formatted_tickets[current_pos])
             current_pos += 1
             continue
 
         chunks.append("---".join(chunk_tickets_list))
 
-        # If we are at the end, break
         if end_pos >= len(all_formatted_tickets):
             break
 
@@ -77,19 +74,31 @@ def chunk_tickets(
         overlap_tokens_count = 0
         new_start_pos = end_pos - 1
 
-        while new_start_pos > current_pos:
-            ticket_to_overlap = all_formatted_tickets[new_start_pos]
-            overlap_tokens_count += token_len(ticket_to_overlap)
-            if chunk_tickets_list and new_start_pos > 0:
-                overlap_tokens_count += token_len("---")
+        if new_start_pos <= current_pos:
+            current_pos = end_pos
+            continue
 
+        # Overlap at least one ticket
+        ticket_to_overlap = all_formatted_tickets[new_start_pos]
+        overlap_tokens_count += token_len(ticket_to_overlap)
+        if new_start_pos > 0:
+            overlap_tokens_count += token_len("---")
+
+        new_start_pos -= 1
+
+        # Continue overlapping more tickets until the overlap token count is met
+        while new_start_pos > current_pos:
             if overlap_tokens_count > overlap:
                 break
+            ticket_to_overlap = all_formatted_tickets[new_start_pos]
+            overlap_tokens_count += token_len(ticket_to_overlap)
+            if new_start_pos > 0:
+                overlap_tokens_count += token_len("---")
 
             new_start_pos -= 1
 
         current_pos = new_start_pos + 1
-        if current_pos >= end_pos: # Ensure we make progress
-        current_pos = end_pos
+        if current_pos >= end_pos:
+             current_pos = end_pos
 
     return chunks

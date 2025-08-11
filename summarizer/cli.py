@@ -1,6 +1,7 @@
 """Command-line interface for the ticket summarizer."""
 
 import argparse
+import asyncio
 from pathlib import Path
 
 from summarizer import (
@@ -25,7 +26,7 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
+async def main() -> None:
     """Main function for the summarizer CLI."""
     args = _parse_args()
 
@@ -33,7 +34,7 @@ def main() -> None:
     if args.model:
         config.settings.model = args.model
     if args.chunk_size:
-        config.settings.max_tokens = args.chunk_size
+        config.settings.chunk_max_tokens = args.chunk_size
     if args.overlap:
         config.settings.chunk_overlap = args.overlap
 
@@ -43,15 +44,13 @@ def main() -> None:
     # 2. Chunk tickets
     chunks = chunker.chunk_tickets(
         tickets,
-        max_tokens=config.settings.max_tokens,
+        chunk_max_tokens=config.settings.chunk_max_tokens,
         overlap=config.settings.chunk_overlap,
     )
 
-    # 3. Call the LLM for each chunk
-    chunk_results: list[list[str]] = []
-    for chunk in chunks:
-        summaries = llm_client.summarise_chunk_sync(chunk)
-        chunk_results.append(summaries)
+    # 3. Call the LLM for each chunk concurrently
+    tasks = [llm_client.summarise_chunk(chunk) for chunk in chunks]
+    chunk_results = await asyncio.gather(*tasks)
 
     # 4. Merge & order results
     rows = aggregator.merge_results(chunk_results)
@@ -63,4 +62,4 @@ def main() -> None:
         writer.write_markdown(rows, args.markdown)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

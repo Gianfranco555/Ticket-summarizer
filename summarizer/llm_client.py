@@ -22,7 +22,7 @@ async def summarise_chunk(chunk_text: str) -> list[str]:
     response = await asyncio.to_thread(
         client.chat.completions.create,
         model=config.settings.model,
-        max_tokens=config.settings.max_tokens // 8,
+        max_tokens=config.settings.model_max_response_tokens,
         temperature=0.3,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},

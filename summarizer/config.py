@@ -16,7 +16,9 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
     model: str = "gpt-4o-mini"
     model_context_window: int = 128_000
-    max_tokens: int = 4096
+    chunk_max_tokens: int = 4096
+    model_max_response_tokens: int = 512
+    model_response_token_ratio: int = 8
     chunk_overlap: int = 50
     rate_limit_per_minute: int = 60
     csv_delimiter: str = ","

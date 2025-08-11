@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SUMM_")
 
     openai_api_key: str | None = None
-    model: str = "gpt-4o-mini"
+    model: str = "o3"
     model_context_window: int = 128_000
-    chunk_max_tokens: int = 4096
+    chunk_max_tokens: int = 15000
     model_max_response_tokens: int = 512
     model_response_token_ratio: int = 8
     chunk_overlap: int = 50

@@ -2,7 +2,7 @@ import asyncio
 import json
 from unittest import mock
 
-from zscaler_ticket_summarizer.summarizer.llm_client import summarise_chunk_sync
+from summarizer.llm_client import summarise_chunk_sync
 
 
 def test_summarise_chunk_sync_e2e():

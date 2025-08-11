@@ -19,4 +19,14 @@ def test_load_tickets_custom_delimiter(tmp_path):
     p.write_text(csv_content)
     tickets = load_tickets(p, delimiter=';')
     assert len(tickets) == 1
-    assert tickets[0] == Ticket(number="10", description="custom delim ticket")
+    assert tickets[0] == Ticket(
+        number="10",
+        description="custom delim ticket",
+        work_notes="",
+        comments="",
+        opened_at="",
+        resolved_at="",
+        closed_at="",
+        assignment_group="",
+        original_assignment_group="",
+    )

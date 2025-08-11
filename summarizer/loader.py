@@ -17,6 +17,13 @@ class Ticket:
 
     number: str
     description: str
+    work_notes: str
+    comments: str
+    opened_at: str
+    resolved_at: str
+    closed_at: str
+    assignment_group: str
+    original_assignment_group: str
     extra: dict[str, Any] = field(default_factory=dict)
 
 
@@ -40,18 +47,42 @@ def load_tickets(path: Path, delimiter: str = ",") -> list[Ticket]:
     """
     if len(delimiter) != 1:
         raise ValueError("Delimiter must be a single character.")
-    df = pd.read_csv(path, delimiter=delimiter, dtype=str)
+    df = pd.read_csv(path, delimiter=delimiter, dtype=str).fillna("")
     required_columns = {"number", "description"}
     if not required_columns.issubset(df.columns):
         missing = sorted(required_columns - set(df.columns))
         raise ValueError(f"Input CSV file is missing required columns: {', '.join(missing)}")
 
+    known_columns = {
+        "number",
+        "description",
+        "work_notes",
+        "comments",
+        "opened_at",
+        "resolved_at",
+        "closed_at",
+        "assignment_group",
+        "original_assignment_group",
+    }
+
     tickets: list[Ticket] = []
     for row in df.to_dict(orient="records"):
-        number = row.get("number")
-        description = row.get("description")
-        if number is None or description is None:
+        ticket_data = {
+            "number": row.get("number"),
+            "description": row.get("description"),
+            "work_notes": row.get("work_notes", ""),
+            "comments": row.get("comments", ""),
+            "opened_at": row.get("opened_at", ""),
+            "resolved_at": row.get("resolved_at", ""),
+            "closed_at": row.get("closed_at", ""),
+            "assignment_group": row.get("assignment_group", ""),
+            "original_assignment_group": row.get("original_assignment_group", ""),
+        }
+        if ticket_data["number"] is None or ticket_data["description"] is None:
             raise ValueError("Missing 'number' or 'description' in row")
-        extra = {k: v for k, v in row.items() if k not in required_columns}
-        tickets.append(Ticket(number=number, description=description, extra=extra))
+
+        extra = {k: v for k, v in row.items() if k not in known_columns}
+        ticket_data["extra"] = extra
+
+        tickets.append(Ticket(**ticket_data))
     return tickets

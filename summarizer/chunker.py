@@ -90,6 +90,6 @@ def chunk_tickets(
 
         current_pos = new_start_pos + 1
         if current_pos >= end_pos: # Ensure we make progress
-             current_pos = end_pos
+        current_pos = end_pos
 
     return chunks
